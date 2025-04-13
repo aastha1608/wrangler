@@ -1,19 +1,3 @@
-/*
- * Copyright © 2017-2019 Cask Data, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
-
 grammar Directives;
 
 options {
@@ -46,7 +30,7 @@ recipe
  ;
 
 statements
- :  ( Comment | macro | directive ';' | pragma ';' | ifStatement)*
+ :  ( Comment | macro | directive ';' | pragma ';' | ifStatement)* 
  ;
 
 directive
@@ -140,8 +124,13 @@ numberRange
  ;
 
 value
- : String | Number | Column | Bool
- ;
+    : BYTE_SIZE
+    | TIME_DURATION
+    | String
+    | Number
+    | Column
+    | Bool
+    ;
 
 ecommand
  : '!' Identifier
@@ -195,7 +184,6 @@ identifierList
  : Identifier (',' Identifier)*
  ;
 
-
 /*
  * Following are the Lexer Rules used for tokenizing the recipe.
  */
@@ -206,47 +194,56 @@ Or       : '||';
 And      : '&&';
 Equals   : '==';
 NEquals  : '!=';
-GTEquals : '>=';
-LTEquals : '<=';
-Match    : '=~';
-NotMatch : '!~';
-QuestionColon : '?:';
-StartsWith : '=^';
-NotStartsWith : '!^';
-EndsWith : '=$';
-NotEndsWith : '!$';
-PlusEqual : '+=';
-SubEqual : '-=';
-MulEqual : '*=';
-DivEqual : '/=';
-PerEqual : '%=';
-AndEqual : '&=';
-OrEqual  : '|=';
-XOREqual : '^=';
-Pow      : '^';
-External : '!';
-GT       : '>';
-LT       : '<';
-Add      : '+';
-Subtract : '-';
-Multiply : '*';
-Divide   : '/';
-Modulus  : '%';
-OBracket : '[';
-CBracket : ']';
-OParen   : '(';
-CParen   : ')';
-Assign   : '=';
-Comma    : ',';
-QMark    : '?';
-Colon    : ':';
-Dot      : '.';
-At       : '@';
-Pipe     : '|';
-BackSlash: '\\';
-Dollar   : '$';
+GTEquals : '>='; 
+LTEquals : '<='; 
+Match    : '=~'; 
+NotMatch : '!~'; 
+QuestionColon : '?:'; 
+StartsWith : '=^'; 
+NotStartsWith : '!^'; 
+EndsWith : '=$'; 
+NotEndsWith : '!$'; 
+PlusEqual : '+='; 
+SubEqual : '-='; 
+MulEqual : '*='; 
+DivEqual : '/='; 
+PerEqual : '%='; 
+AndEqual : '&='; 
+OrEqual  : '|='; 
+XOREqual : '^='; 
+Pow      : '^'; 
+External : '!'; 
+GT       : '>'; 
+LT       : '<'; 
+Add      : '+'; 
+Subtract : '-'; 
+Multiply : '*'; 
+Divide   : '/'; 
+Modulus  : '%'; 
+OBracket : '['; 
+CBracket : ']'; 
+OParen   : '('; 
+CParen   : ')'; 
+Assign   : '='; 
+Comma    : ','; 
+QMark    : '?'; 
+Colon    : ':'; 
+Dot      : '.'; 
+At       : '@'; 
+Pipe     : '|'; 
+BackSlash: '\\'; 
+Dollar   : '$'; 
 Tilde    : '~';
 
+
+// New Lexer rules
+BYTE_SIZE: DIGITS BYTE_UNIT;
+TIME_DURATION: DIGITS TIME_UNIT;
+
+// Fragment rules for units
+fragment BYTE_UNIT: [KMGTP]? 'B';    // KB, MB, GB, TB
+fragment TIME_UNIT: ('ms' | 's' | 'm' | 'h'); // ms, s, m, h (milliseconds to hours)
+fragment DIGITS: [0-9]+ ('.' [0-9]+)?;
 
 Bool
  : 'true'
@@ -258,15 +255,15 @@ Number
  ;
 
 Identifier
- : [a-zA-Z_\-] [a-zA-Z_0-9\-]*
+ : [a-zA-Z_\-] [a-zA-Z_0-9\-]* 
  ;
 
 Macro
- : [a-zA-Z_] [a-zA-Z_0-9]*
+ : [a-zA-Z_] [a-zA-Z_0-9]* 
  ;
 
 Column
- : ':' [a-zA-Z_\-] [:a-zA-Z_0-9\-]*
+ : ':' [a-zA-Z_\-] [:a-zA-Z_0-9\-]* 
  ;
 
 String
@@ -304,7 +301,7 @@ Space
  ;
 
 fragment Int
- : '-'? [1-9] Digit* [L]*
+ : '-'? [1-9] Digit* [L]* 
  | '0'
  ;
 
